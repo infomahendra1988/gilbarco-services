@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.gilbarco.service</groupId>
+	<artifactId>gilbarco.service</artifactId>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
+	<properties>
+		<version.jersey>2.17</version.jersey>
+		<version.glassfish>2.4.0</version.glassfish>
+		<version.jdk>1.7</version.jdk>
+		<version.jackson>2.3.2</version.jackson>
+		<version.junit>4.8</version.junit>
+		<version.maven.compiler>3.3</version.maven.compiler>
+		<version.maven.war>2.6</version.maven.war>
+		<test.conf.include>**/TestSuite.java</test.conf.include>
+		<skipTests>false</skipTests>
+
+	</properties>
+	<build>
+		<plugins>
+		<!-- this plug-in is responsible to COMPILE java code and commented  because heroku automatic take care  -->
+			<!-- <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${version.maven.compiler}</version>
+				<configuration>
+					<source>${version.jdk}</source>
+					<target>${version.jdk}</target>
+				</configuration>
+			</plugin> -->
+			<!-- this plug-in is responsible to CREATE war file  and commented because heroku automatic take care -->
+			<!-- <plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${version.maven.war}</version>
+				<configuration>
+					<warSourceDirectory>webapp</warSourceDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin> -->
+			<!-- this plug-in is responsible to EXECUTE test suite per property mention -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>${test.conf.include}</include>
+					</includes>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+			
+			<!-- this plug-in for heroku web-app runner -->
+			
+			 <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.3</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals><goal>copy</goal></goals>
+                    <configuration>
+                        <artifactItems>
+                            <artifactItem>
+                         <groupId>com.github.jsimone</groupId>
+                        <artifactId>webapp-runner</artifactId>
+                                <version>8.0.30.2</version>
+                     <destFileName>webapp-runner.jar</destFileName>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+		</plugins>
+	</build>
+	
+		<!-- start maintain required dependencies need for requirement -->
+	
+	<dependencies>
+		
+		<!-- below 2 depencency is responsible to create jersey container servlet in web container -->
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		
+	<!-- below common-logging dependency for logging but currently we not use -->
+	
+	<!-- <dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		 	<scope>runtime</scope> 
+		</dependency> -->
+		
+	<!-- below jersey-client dependency is responsible to creating jersey client for test web service -->
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${version.jersey}</version>
+		</dependency>
+		
+	<!-- below 2 dependency is responsible for understand json data like accept and contain -->
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${version.jackson}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${version.jackson}</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+	<!-- below junit dependency is responsible for prepare junit test case-->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+
+</project>
